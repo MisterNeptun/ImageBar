@@ -3,7 +3,7 @@
 With this useful app, you can easily copy pictures from one place to another without having to temporarily store them on your computer.
 
 <video width="640" controls>
-  <source src="ImageBar/tutorial.mov" type="video/quicktime">
+  <source src="ImageBar/Tutorial.mov" type="video/quicktime">
   Your browser does not support the video tag.
 </video>
 
