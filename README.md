@@ -3,7 +3,7 @@ With this useful app, you can easily copy pictures from one place to another wit
 
 
 <video width="640" controls>
-  <source src="tutorial.mov" type="video/quicktime">
+  <source src="ImageBar/tutorial.mov" type="video/quicktime">
   Your browser does not support the video tag.
 </video>
 
