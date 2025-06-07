@@ -9,12 +9,19 @@ struct GeneralView: View {
     @Binding var darkmode: Bool
     @Binding var imagenumber: Double
     @Binding var height: Double
+    @Binding var info: Bool
     var body: some View {
         VStack{
             Toggle(isOn: $showtext){
                 Text("Show image name & rename image")
                     .foregroundColor(.text)
             }.toggleStyle(.switch)
+            Toggle(isOn: $info){
+                Text("Button for showing information")
+                    .foregroundStyle(Color.text)
+            }.toggleStyle(.switch)
+            
+            
             
             Toggle(isOn: $modemanual){
                 Text("Set dark/ligthmode manually")
@@ -25,7 +32,7 @@ struct GeneralView: View {
                     Text("Light")
                         .foregroundColor(.text)
                     Toggle(isOn: $darkmode){
-                    }.toggleStyle(DarmodeToggleStyl())
+                    }.toggleStyle(DarkmodeToggleStyl())
                     
                     Text("Dark")
                         .foregroundColor(.text)
@@ -56,7 +63,7 @@ func roundscreen(number:Double) -> Double{
     return value
 
 }
-struct DarmodeToggleStyl: ToggleStyle {
+struct DarkmodeToggleStyl: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack {
             configuration.label

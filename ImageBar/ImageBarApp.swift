@@ -14,13 +14,16 @@ struct ImageBarApp: App {
     @AppStorage("modemanual") public var modemanual: Bool = false
     @AppStorage("screenheight") private var height: Double = 0.0
     @AppStorage("numberofimagesinapp") private var imagenumber: Double = 3.0
+    @AppStorage("info-window") private var info: Bool = false
 
     init() {
+        
        
             viewopen = true
             if let screen = NSScreen.main {
                 let screenHeight = screen.frame.height
-                height = screenHeight 
+                height = screenHeight
+            
             }
         
         
@@ -39,7 +42,7 @@ struct ImageBarApp: App {
                 
                 if firstLaunch == true {
                     
-                    LaunchView(showtext: $showtext).onAppear(){
+                    LaunchView(showtext: $showtext, info: $info).onAppear(){
                         launchwindow()}
                     
                     
@@ -47,7 +50,7 @@ struct ImageBarApp: App {
                 }else{
                     if viewopen == true  {
                         
-                        ContentView(viewopen: $viewopen, showtext:$showtext, imagenumber: $imagenumber)
+                        ContentView(viewopen: $viewopen, showtext:$showtext, imagenumber: $imagenumber, info: $info)
                             .onAppear(){
                                 mainwindow()
                                 
@@ -57,7 +60,7 @@ struct ImageBarApp: App {
                         ClosedContentView(viewopen: $viewopen)
                             .onAppear(){
                                 closedmainwindow()
-                                
+                                    
                             }
 
                     }
@@ -69,12 +72,12 @@ struct ImageBarApp: App {
             
             
         }.windowStyle(HiddenTitleBarWindowStyle())
-       
+          
        
        
         Settings{
             
-            Settingsview(showtext: $showtext,modemanual: $modemanual,darkmode: $darkmode, imagenumber: $imagenumber, height: $height)
+            Settingsview(showtext: $showtext,modemanual: $modemanual,darkmode: $darkmode, imagenumber: $imagenumber, height: $height, info: $info)
             
             
         }
@@ -135,4 +138,5 @@ func launchwindow(){
             
         }
     }}
+
 

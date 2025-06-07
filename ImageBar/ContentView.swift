@@ -9,7 +9,7 @@ struct ContentView: View {
     @Environment(\.openSettings) private var openSettings
     @Binding var showtext: Bool
     @Binding var imagenumber:Double
-    
+    @Binding var info: Bool
   
    
     var body: some View {
@@ -27,7 +27,7 @@ struct ContentView: View {
                                 Spacer()
                                 let imagenumberint = Int(imagenumber)
                                 ForEach(0..<imagenumberint, id: \.self) { i in
-                                    ImageDrop(showtext: $showtext,id: i)
+                                    ImageDrop(showtext: $showtext,id: i, info: $info)
                                         .padding(.all)
                                         .border(Color.clear, width: 10)
                                         

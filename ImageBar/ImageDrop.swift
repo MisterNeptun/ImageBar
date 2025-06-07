@@ -9,7 +9,12 @@ struct ImageItem: Identifiable {
     let image: NSImage
     var title: String
     var fileURL: URL?
-
+    let timestamp: Int = Int(Date().timeIntervalSince1970)
+    let timestampString: String = {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd.MM.yyyy HH:mm"
+            return formatter.string(from: Date())
+        }()
     @discardableResult
     func save() -> URL? {
         guard let data = self.image.tiffRepresentation else { return nil }
@@ -35,25 +40,39 @@ struct ImageDrop: View {
     @State private var imageItem: [ImageItem] = []
     @FocusState private var isFocused: Bool
     @Binding var showtext: Bool
+    
     var id: Int
-
+    @Binding var info: Bool
     var body: some View {
         VStack {
             if let firstImage = imageItem.first {
                 VStack {
-                    Image(nsImage: firstImage.image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 150, height: 100)
-                        .padding([.top, .leading, .trailing])
-                        .border(Color.clear, width: 10)
-                        .shadow(color: Color.gray.opacity(0.5), radius: 20)
-                        .onDrag {
-                            let provider = NSItemProvider(object: firstImage.image)
-                            provider.suggestedName = firstImage.title
-                            AudioServicesPlaySystemSound(1)
-                            return provider
-                        }
+                    ZStack(alignment: .topTrailing){
+                        Image(nsImage: firstImage.image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150, height: 100)
+                            .padding([.top, .leading, .trailing])
+                            .border(Color.clear, width: 10)
+                            .shadow(color: Color.gray.opacity(0.5), radius: 20)
+                            .onDrag {
+                                let provider = NSItemProvider(object: firstImage.image)
+                                provider.suggestedName = firstImage.title
+                                AudioServicesPlaySystemSound(1)
+                                return provider
+                            }
+                        if info{
+                            Button(action: {
+                                showSmallInfoWindow(titel: imageItem[0].title,time: imageItem[0].timestampString, image: imageItem[0].image)
+                            }) {
+                                Image(systemName: "info.circle.fill")
+                                    .foregroundColor(.black)
+                                    .padding(3)
+                            }
+                            
+                            .offset(x: -10, y: 10)
+                            .padding(3)}}
+                          
 
                     if showtext {
                         TextField(firstImage.title, text: $imageItem[0].title)
@@ -105,9 +124,9 @@ struct ImageDrop: View {
                         }
                         imageItem.removeAll()
                     }) {
-                        Image(systemName: "x.circle")
+                        Image(systemName: "x.circle.fill")
                             .symbolRenderingMode(.palette)
-                            .foregroundStyle(.red, .black)
+                            .foregroundStyle(.white, .red)
                             .padding(3)
                     }
                 }
@@ -196,4 +215,42 @@ struct ImageDrop: View {
             return true
         }
     }
+}
+
+func showSmallInfoWindow(titel: String, time: String, image: NSImage) {
+    let infoSize = NSSize(width: 300, height: 100)
+    let infoWindow = NSWindow(
+        contentRect: NSRect(origin: .zero, size: infoSize),
+        styleMask: [.titled, .closable],
+        backing: .buffered,
+        defer: false
+    )
+    
+    infoWindow.title = titel
+    infoWindow.level = .floating
+    infoWindow.isReleasedWhenClosed = false
+
+    // Retrieve image size in pixels
+    let pixelSize = image.size
+    let sizeString = "\(Int(pixelSize.width)) x \(Int(pixelSize.height)) pixels"
+
+    // Create label with image size info
+    let labelText = "Added to ImageBar on: \(time)\nSize: \(sizeString)"
+    let label = NSTextField(labelWithString: labelText)
+    label.frame = NSRect(x: 20, y: 20, width: 260, height: 60)
+    label.lineBreakMode = .byWordWrapping
+    label.maximumNumberOfLines = 3
+
+    let contentView = NSView(frame: NSRect(origin: .zero, size: infoSize))
+    contentView.addSubview(label)
+    infoWindow.contentView = contentView
+
+    // Position near screen center or main window
+    if let screenFrame = NSScreen.main?.frame {
+        let centerX = screenFrame.midX - infoSize.width / 2
+        let centerY = screenFrame.midY - infoSize.height / 2
+        infoWindow.setFrameOrigin(NSPoint(x: centerX, y: centerY))
+    }
+
+    infoWindow.makeKeyAndOrderFront(nil)
 }

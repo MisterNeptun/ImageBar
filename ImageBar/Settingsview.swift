@@ -8,10 +8,11 @@ struct Settingsview: View {
     @Binding var darkmode: Bool
     @Binding var imagenumber: Double
     @Binding var height: Double
+    @Binding var info: Bool
     var body: some View {
         TabView {
             Tab("General", systemImage: "gear"){
-                GeneralView(showtext: $showtext,modemanual: $modemanual,darkmode: $darkmode, imagenumber: $imagenumber, height: $height)
+                GeneralView(showtext: $showtext,modemanual: $modemanual,darkmode: $darkmode, imagenumber: $imagenumber, height: $height, info: $info)
             }
             Tab("Tutorial", systemImage: "play.square"){
                 TutorialView()
